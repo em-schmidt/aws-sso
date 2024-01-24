@@ -22,14 +22,14 @@ Provides a default chain that adds SSO to the chain in the same order as other v
 
 ```clj
 (require [aws-sso.credentials :as sso])
-(aws/client {:api sts :credential_provider sso/sso-credentials-provider)
+(aws/client {:api sts :credential_provider (sso/sso-credentials-provider)})
 ```
 
 ### provider chain
 
 ```clj
-(require sso)
-(aws/client {:api sts :credential_provider sso/provider-chain})
+(require [aws-sso.credential :as sso])
+(aws/client {:api sts :credential_provider (sso/provider-chain)})
 ```
 
 
