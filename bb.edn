@@ -1,0 +1,2 @@
+{:paths ["src"] 
+ :deps {io.github.em-schmidt/aws-sso {:local/root "."}}}
