@@ -110,7 +110,7 @@
        :aws.credentials/ttl (aws.credentials/calculate-ttl {:Expiration expiration-inst})})
     nil))
 
-(defn provider
+(defn sso-credentials-provider
   "Creates a credential provider which periodically refreshes credentials
   by using the SSO profile"
   []
@@ -122,6 +122,21 @@
           (catch Exception e
             (log/errorf e "failed to refresh credentials")))))))
 
+(defn provider-chain
+ "Creates a credential provider chain that follows the order of 
+  standards AWS credential providers, including SSO.  
+  See: https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials-chain.html" 
+ []
+ (let [http-client (http/client {})]
+   (aws.credentials/chain-credentials-provider
+     [(aws.credentials/system-property-credentials-provider)
+      (aws.credentials/environment-credentials-provider)
+      (aws.credentials/profile-credentials-provider)
+      (sso-credentials-provider)
+      (aws.credentials/container-credentials-provider http-client)
+      (aws.credentials/instance-profile-credentials-provider http-client)])))
+
 (comment 
   (fetch-from-profile)
-  (provider))
+  (sso-credentials-provider)
+  (provider-chain))

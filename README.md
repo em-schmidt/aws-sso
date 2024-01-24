@@ -2,13 +2,27 @@
 
 A credential provider for the cognitect aws library that implements AWS SSO, suitable for use as a standalone credential provder or in a provider chain.
 
+Provides a default chain that adds SSO to the chain in the same order as other v2 SDKs.
+
+## Include
+
+### deps
+
+```edn
+{:deps 
+  {io.github.em-schmidt/aws-sso 
+    {:git/sha "<latest version>"
+     :git/url "https://github.com/em-schmidt/aws-sso"}
+
+```
+
 ## Usage
 
 ### standalone
 
 ```clj
-(require sso)
-(aws/client {:api sts :credential_provider sso/provider})
+(require [aws-sso.credentials :as sso])
+(aws/client {:api sts :credential_provider sso/sso-credentials-provider)
 ```
 
 ### provider chain
